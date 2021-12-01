@@ -4,7 +4,10 @@ Github Game Off 2021 is an annual game jam, where participants spend the month o
 The theme for this year's Game Off is **BUG**.
 
 ### Bug Hunt
-Bug Hunt is an adventure survival game where you explore a dungeon that is crawling with various bugs.
+
+![Bug Hunt](title.png)
+
+Bug Hunt is an adventure survival game where you explore a dungeon that is crawling with various mysterious bugs.
 
 
 ## Installation
