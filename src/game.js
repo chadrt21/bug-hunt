@@ -7,42 +7,78 @@ kontra.loadAssets('background.png', 'enemy.png', 'player.png').then(
     var background = kontra.sprite({
       x: 0,
       y: 0,
-      image: kontra.images.background
+      // image: kontra.images.background
+      width: 300,
+      height: 300,
+      color: 'grey'
     });
+
+    // var text = kontra.text({
+    //   text: 'Bug Count: ',
+    //   font: '32px Arial',
+    //   color: 'white',
+    //   x: 300,
+    //   y: 100,
+    //   anchor: {x: 0.5, y: 0.5},
+    //   textAlign: 'left'
+    // });
 
     var player = kontra.sprite({
       x: 120,
       y: 240,
-      image: kontra.images.player
+      width: 10,
+      height: 20,
+      color: 'red'
+      // image: kontra.images.player
     });
 
-    var enemies = [
+    // var randomColors = [...Array(5)].map((i) => Math.floor(Math.random()*16777215).toString(16))
+    var randomColors = ['white','green','yellow','cyan']
+    var bugs = [
       kontra.sprite({
         x: 100,
         y: 180,
-        image: kontra.images.enemy,
+        width: 10,
+        height: 10,
+        color: randomColors[0],
+        // image: kontra.images.enemy,
+        timeToLive: 10,
         dx: 1
       }),
       kontra.sprite({
         x: 100,
         y: 130,
-        image: kontra.images.enemy,
+        width: 10,
+        height: 10,
+        color: randomColors[1],
+        // image: kontra.images.enemy,
+        timeToLive: 10,
         dx: 1.8
       }),
       kontra.sprite({
         x: 100,
         y: 80,
-        image: kontra.images.enemy,
+        width: 10,
+        height: 10,
+        color: randomColors[2],
+        // image: kontra.images.enemy,
+        timeToLive: 10,
         dx: 0.8
       }),
       kontra.sprite({
         x: 100,
         y: 200,
-        image: kontra.images.enemy,
+        width: 10,
+        height: 10,
+        color: randomColors[3],
+        // image: kontra.images.enemy,
+        timeToLive: 10,
         dx: 1.2
       })
     ];
 
+    var bugCount = 0
+    var totalBugs = bugs.length;
     var loop = kontra.gameLoop({
       update: function() {
 
@@ -54,7 +90,15 @@ kontra.loadAssets('background.png', 'enemy.png', 'player.png').then(
           player.y += 1;
         }
 
-        if(player.y <= 40) {
+        if(kontra.keys.pressed('left')) {
+          player.x -= 1;
+        }
+
+        if(kontra.keys.pressed('right')) {
+          player.x += 1;
+        }
+
+        if(bugCount >= 4) {
           //pause game
           loop.stop();
           alert('You Won!');
@@ -63,26 +107,35 @@ kontra.loadAssets('background.png', 'enemy.png', 'player.png').then(
         player.update();
 
         //enemy bouncing
-        enemies.forEach(function(enemy){
-          if(enemy.x < 32) {
-            enemy.x = 32;
-            enemy.dx = Math.abs(enemy.dx);
+        // bugs = bugs.filter(bug => bug.isAlive());
+        // console.log(bugs.filter(bug => bug.isAlive()).length)
+        // bugCount = totalBugs - bugs.length;
+        bugs.forEach(function(bug,color){
+          if(bug.x < 32) {
+            bug.x = 32;
+            bug.dx = Math.abs(bug.dx);
           }
 
-          else if(enemy.x > 200) {
-            enemy.x = 200;
-            enemy.dx = -Math.abs(enemy.dx);
+          else if(bug.x > 200) {
+            bug.x = 200;
+            bug.dx = -Math.abs(bug.dx);
           }
 
-          enemy.update();
+          bug.update();
 
           //check for collision
-          if(enemy.collidesWith(player)) {
-            loop.stop();
-            alert('GAME OVER!');
-            window.location = '';
+          if(bug.collidesWith(player)) {
+            bug.ttl = 0;
+            // bug.update();
+            // console.log(bugs.length)
+            // bug.isAlive = false;
+            // console.log(bug.valueOf());
+            // bug.update();
+            // bugCount += 1;
+            // bug.render();
           }
         });
+
 
         background.update();
 
@@ -91,9 +144,12 @@ kontra.loadAssets('background.png', 'enemy.png', 'player.png').then(
       render: function() {
         background.render();
         player.render();
-        enemies.forEach(function(enemy){
-          enemy.render();
+        bugs.forEach(function(bug){
+          // if(bug.isAlive()) {
+            bug.render();
+          // }
         });
+        // text.render();
       }
     });
 
